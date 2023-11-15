@@ -45,15 +45,17 @@
           window.NativeClient.onGetToken(token);
           Unity.call(token);
         } else {
-          Unity.call(token);
-          sendIos("captchaDidFinish", token);
+            Unity.call(token);
+            sendIos("captchaDidFinish", token);
         }
       }
 
       function handleChallengeVisible() {
         if (window.NativeClient) {
+            Unity.call("challengeDidAppear");
           window.NativeClient.onChallengeVisible();
         } else {
+            Unity.call("challengeDidAppear");
           sendIos("challengeDidAppear");
         }
       }
@@ -61,8 +63,10 @@
       function handleChallengeHidden() {
         if (window.NativeClient) {
           window.NativeClient.onChallengeHidden();
+          Unity.call("challengeDidDisappear");
         } else {
           sendIos("challengeDidDisappear");
+          Unity.call("challengeDidDisappear");
         }
       }
 
