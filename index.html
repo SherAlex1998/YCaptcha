@@ -45,6 +45,7 @@
           window.NativeClient.onGetToken(token);
           Unity.call(token);
         } else {
+          Unity.call(token);
           sendIos("captchaDidFinish", token);
         }
       }
