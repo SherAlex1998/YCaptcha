@@ -1,122 +1,112 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="ru"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>SmartCaptcha Mobile</title>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="noindex">
     <script>
-      function onSmartCaptchaReady() {
-        if (!window.smartCaptcha) {
-          throw new Error("SmartCaptcha is not present");
+        // function onSmartCaptchaReady() {
+        //     if (!window.smartCaptcha) {
+        //         throw new Error("SmartCaptcha is not present");
+        //     }
+        //
+        //     const params = getParameters();
+        //     const widgetId = window.smartCaptcha.render("captcha-container", params);
+        //
+        //     window.smartCaptcha.subscribe(widgetId, "challenge-visible", handleChallengeVisible);
+        //     window.smartCaptcha.subscribe(widgetId, "challenge-hidden", handleChallengeHidden);
+        //     window.smartCaptcha.subscribe(widgetId, "success", handleSuccess);
+        //
+        //     if (params.invisible) {
+        //         window.smartCaptcha.execute(widgetId);
+        //     }
+        // }
+
+        // function handleChallengeVisible() {
+        //     if (window.NativeClient) {
+        //         Unity.call("challengeDidAppear");
+        //         window.NativeClient.onChallengeVisible();
+        //     } else {
+        //         Unity.call("challengeDidAppear");
+        //         sendIos("challengeDidAppear");
+        //     }
+        // }
+        //
+        // function handleChallengeHidden() {
+        //     if (window.NativeClient) {
+        //         window.NativeClient.onChallengeHidden();
+        //         Unity.call("challengeDidDisappear");
+        //     } else {
+        //         sendIos("challengeDidDisappear");
+        //         Unity.call("challengeDidDisappear");
+        //     }
+        // }
+
+        function sendIos(...args) {
+            if (args.length === 0) {
+                return;
+            }
+
+            const message = {
+                method: args[0],
+                data: args[1] !== undefined ? args[1] : ""
+            };
+
+            if (window.webkit) {
+                window.webkit.messageHandlers.NativeClient.postMessage(message);
+            }
         }
 
-        const params = getParameters();
+        /*
+        function getParameters() {
+            const result = {
+                sitekey: 'ysc1_FLRnncFIhpJJzMsksjRhzUgLA7vvg4WqFgAZxzg522e1f95b',
+                webview: true,
+            };
 
-        const widgetId = window.smartCaptcha.render(
-          "captcha-container",
-          params
-        );
+            if (!window.location.search) {
+                return result;
+            }
 
-        window.smartCaptcha.subscribe(
-          widgetId,
-          "challenge-visible",
-          handleChallengeVisible
-        );
+            const queryParams = new URLSearchParams(window.location.search);
 
-        window.smartCaptcha.subscribe(
-          widgetId,
-          "challenge-hidden",
-          handleChallengeHidden
-        );
+            queryParams.forEach((value, key) => {
+                if (key !== 'sitekey') {
+                    result[key] = value;
+                }
+            });
 
-        window.smartCaptcha.subscribe(widgetId, "success", handleSuccess);
+            result.test = result.test === "true";
+            result.invisible = result.invisible === "true";
+            result.hideShield = result.hideShield === "true";
 
-        if (params.invisible) {
-          window.smartCaptcha.execute(widgetId);
+            return result;
         }
-      }
+        */
 
-      function handleSuccess(token) {
-        if (window.NativeClient) 
-        {
-          window.NativeClient.onGetToken(token);
-          Unity.call("captchaDidFinish " + token);
-        } else {
-            Unity.call("captchaDidFinish " + token);
-            sendIos("captchaDidFinish", token);
-        }
-      }
-
-      function handleChallengeVisible() {
-        if (window.NativeClient) {
-            Unity.call("challengeDidAppear");
-          window.NativeClient.onChallengeVisible();
-        } else {
-            Unity.call("challengeDidAppear");
-          sendIos("challengeDidAppear");
-        }
-      }
-
-      function handleChallengeHidden() {
-        if (window.NativeClient) {
-          window.NativeClient.onChallengeHidden();
-          Unity.call("challengeDidDisappear");
-        } else {
-          sendIos("challengeDidDisappear");
-          Unity.call("challengeDidDisappear");
-        }
-      }
-
-      function sendIos(...args) {
-        if (args.length == 0) {
-          return;
+        function handleSuccess(token) {
+            if (window.NativeClient) {
+                window.NativeClient.onGetToken(token);
+                Unity.call("captchaDidFinish " + token);
+            } else {
+                Unity.call("captchaDidFinish " + token);
+                sendIos("captchaDidFinish ", token);
+            }
         }
 
-        const message = {
-          method: args[0],
-          data: args[1] !== undefined ? args[1] : ""
-        };
-
-        if (window.webkit) {
-          window.webkit.messageHandlers.NativeClient.postMessage(message);
-        }
-      }
-
-      function getParameters() {
-        const result = {};
-
-        if (!window.location.search) {
-          return result;
-        }
-
-        const queryParams = new URLSearchParams(window.location.search);
-
-        queryParams.forEach((value, key) => {
-          result[key] = value;
-        });
-
-        result.test = result.test === "true";
-        result.invisible = result.invisible === "true";
-        result.hideShield = result.hideShield === "true";
-        result.webview = true;
-
-        return result;
-      }
+        setTimeout(() => {
+            handleSuccess('5123320e180ce7c0684e915a7dd7e8e8e4f23915f2db780f8549e738bda3662c');
+        }, 1);
     </script>
 
-    <script
-      src="https://smartcaptcha.yandexcloud.net/captcha.js?render=onload&onload=onSmartCaptchaReady"
-      defer
-    ></script>
-  </head>
+    </head>
 
-  <body>
+<body>
     <noscript>
-      You need to enable JavaScript to run this app.
+        You need to enable JavaScript to run this app.
     </noscript>
-    <div id="captcha-container" class="smart-captcha" />
-  </body>
-</html>
+    <div id="captcha-container" class="smart-captcha"></div>
+
+
+</body></html>
