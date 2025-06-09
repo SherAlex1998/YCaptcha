@@ -7,41 +7,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="noindex">
     <script>
-        // Функция, которая будет пытаться отправить сообщение, пока Unity не будет готов.
         function safeSendToUnity(message) {
-            // Проверяем, существует ли объект Unity и его метод call
             if (window.Unity && typeof window.Unity.call === 'function') {
-                // Если да - отправляем сообщение.
                 console.log("Unity is ready. Sending message: " + message);
                 window.Unity.call(message);
             } else {
-                // Если нет - ждем 100 мс и пробуем снова.
                 console.log("Unity not ready. Retrying in 100ms...");
                 setTimeout(() => safeSendToUnity(message), 100);
             }
         }
 
-        // Эта функция просто готовит сообщение и передает его нашей "безопасной" обертке.
         function handleSuccess(token) {
             const message = "captchaDidFinish " + token;
 
-            // На Android объект NativeClient есть почти сразу. Эта проверка полезна для обратной совместимости.
             if (window.NativeClient && window.NativeClient.onGetToken) {
-                // На Android для надежности вызываем и старый метод, и новый
                 window.NativeClient.onGetToken(token);
                 safeSendToUnity(message);
             } else {
-                // На iOS (и как запасной вариант на Android) просто вызываем нашу безопасную функцию
                 safeSendToUnity(message);
             }
         }
 
-        // --- Здесь мы имитируем получение токена от Яндекса ---
-        // Это может быть и реальный вызов Yandex.Captcha, как было раньше.
-        // Для теста просто вызываем handleSuccess через небольшую задержку.
         setTimeout(() => {
-            // Можете использовать любой токен для теста
-            handleSuccess('github-test-token-12345');
+            handleSuccess('5123320e180ce7c0684e915a7dd7e8e8e4f23915f2db780f8549e738bda3662c');
         }, 50);
 
     </script>
